@@ -80,7 +80,6 @@ export const verifySecret = async ({ accountId, password }: { accountId: string;
 };
 
 export const getCurrentUser = async () => {
-
     try {
         const { database, account } = await createSessionClient();
 
@@ -89,13 +88,12 @@ export const getCurrentUser = async () => {
         const user = await database.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.userscollectionId,
-            [Query.equal("accountId", result.$id)]
+            [Query.equal("accountId", result.$id)],
         );
 
-        if (user.total < 0) return null;
+        if (user.total <= 0) return null;
 
         return parseStringify(user.documents[0]);
-
     } catch (error) {
         console.log(error);
     }
