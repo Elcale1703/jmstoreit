@@ -80,19 +80,25 @@ export const verifySecret = async ({ accountId, password }: { accountId: string;
 };
 
 export const getCurrentUser = async () => {
-    const { database, account } = await createSessionClient();
 
-    const result = await account.get();
+    try {
+        const { database, account } = await createSessionClient();
 
-    const user = await database.listDocuments(
-        appwriteConfig.databaseId,
-        appwriteConfig.userscollectionId,
-        [Query.equal("accountId", result.$id)]
-    );
+        const result = await account.get();
 
-    if (user.total < 0) return null;
+        const user = await database.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.userscollectionId,
+            [Query.equal("accountId", result.$id)]
+        );
 
-    return parseStringify(user.documents[0]);
+        if (user.total < 0) return null;
+
+        return parseStringify(user.documents[0]);
+
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 export const signOutUser = async () => {
@@ -118,7 +124,7 @@ export const signInUser = async ({ email }: { email: string }) => {
             return parseStringify({ accountId: existingUser.accountId });
         }
         return parseStringify({ accountId: null, error: "User not found" });
-        
+
     } catch (error) {
         handleError(error, "Failed to sign in user");
     }
