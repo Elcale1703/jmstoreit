@@ -5,6 +5,7 @@ import { convertFileSize, formatDateTime } from "@/lib/utils";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import React from "react";
 
 const ImageThumbnail = ({ file }: { file: Models.Document }) => (
     <div className="file-details-thumbnail">
